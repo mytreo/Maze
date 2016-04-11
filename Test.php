@@ -102,24 +102,26 @@ class Maze
     }
 
 
-    public function pathFinder($startPoint, $way)
+    public function pathFinder($tmpPoint, $way)
     {
-        $tmpPoint = $startPoint;
+        echo $tmpPoint . "\n";
         $way[] = $tmpPoint;
-        $this->maze->setPointAvalaible($tmpPoint);
-        $neightbours = $this->maze->getPointNeightbours($tmpPoint);
-        if (count($neightbours) == 0) {
-            $this->setPointAvalaible($tmpPoint);
-            return $way;
-        } else {
-            $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
-            $this->maze->setWay($tmpPoint, $neightbour);
-            $tmpPoint = $neightbour;
-            return pathFinder($tmpPoint, $way);
+        $this->setPointAvalaible($tmpPoint);
+        $neightbours = $this->getPointNeightbours($tmpPoint);
+        while (count($way) < 80) {
+            if (count($neightbours) == 0) {
+                $this->setPointAvalaible($tmpPoint);
+                return $way;
+            } else {
+                $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
+                $this->setWay($tmpPoint, $neightbour);
+                $tmpPoint = $neightbour;
+                return $this->pathFinder($tmpPoint, $way);
+            }
         }
     }
-
 }
+
 
 $way = array();
 
