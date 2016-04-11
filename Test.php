@@ -68,12 +68,12 @@ class Maze
         echo "\n";
     }
 
-    public function setPointAvalaible($point)
+    private function setPointAvalaible($point)
     {
-        $this->maze[$point->x][$point->y] = ' ';
+        $this->maze[$point->x][$point->y] = '^';
     }
 
-    public function getPointNeightbours($point)
+    private function getPointNeightbours($point)
     {
         $neightbourPoints = array();
         $testpoints = array(
@@ -84,16 +84,14 @@ class Maze
         );
 
         foreach ($testpoints as $testPoint) {
-            if ($testPoint->x > 0 && $testPoint->y > 0
-                && $this->maze[$testPoint->x][$testPoint->y] == 0
-            ) {
+            if ($testPoint->x > 0 && $testPoint->y > 0 && $this->maze[$testPoint->x][$testPoint->y] === 0) {
                 $neightbourPoints[] = $testPoint;
             }
         }
         return $neightbourPoints;
     }
 
-    public function setWay($p1, $p2)
+    private function setWay($p1, $p2)
     {
         $dX = (($p2->x) - ($p1->x)) / 2;
         $dY = (($p2->y) - ($p1->y)) / 2;
@@ -105,6 +103,9 @@ class Maze
     public function pathFinder($tmpPoint, $way)
     {
         echo $tmpPoint . "\n";
+        $this->print_maze();
+        echo "\n";
+
         $way[] = $tmpPoint;
         $this->setPointAvalaible($tmpPoint);
         $neightbours = $this->getPointNeightbours($tmpPoint);
@@ -127,7 +128,7 @@ $way = array();
 
 
 $p = new Point(1, 1);
-$testMaze = new Maze(21, 21);
+$testMaze = new Maze(21, 51);
 
 $way[] = $testMaze->pathFinder($p, array());
 
