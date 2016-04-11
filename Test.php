@@ -19,7 +19,7 @@ class Point
 
     public function __toString()
     {
-        return "(".$this->x . "," . $this->y.")";
+        return "(" . $this->x . "," . $this->y . ")";
     }
 }
 
@@ -112,21 +112,22 @@ class Maze
         $way[] = $tmpPoint;
         $this->setPointAvalaible($tmpPoint);
         $neightbours = $this->getPointNeightbours($tmpPoint);
-        do{
+        do {
             if (count($neightbours) == 0) {
-                $this->setPointAvalaible($tmpPoint);
-                $tmpPoint= $way[count($way)-1];
-                unset($way[count($way)-1]);
-                return $this->pathFinder($tmpPoint, $way);
-            } elseif(count($way)>1) {
+                if (count($way) > 1) {
+                    array_pop($way);
+                    $tmpPoint = array_pop($way);
+                    return $this->pathFinder($tmpPoint, $way);
+                } else {
+                    return $way;
+                }
+            } else {
                 $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
                 $this->setWay($tmpPoint, $neightbour);
                 $tmpPoint = $neightbour;
                 return $this->pathFinder($tmpPoint, $way);
-            }else{
-                $this->setPointAvalaible($tmpPoint);
-                return $way;}
-        }while ($tmpPoint!= new Point(1,1));
+            }
+        } while ($tmpPoint != new Point(1, 1));
     }
 }
 
@@ -135,9 +136,9 @@ $way = array();
 
 
 $p = new Point(1, 1);
-$testMaze = new Maze(21, 51);
+$testMaze = new Maze(11, 11);
 
-$way= $testMaze->pathFinder($p, array());
+$way = $testMaze->pathFinder($p, array());
 
 $testMaze->print_maze();
 
