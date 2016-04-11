@@ -19,7 +19,7 @@ class Point
 
     public function __toString()
     {
-        return $this->x . " " . $this->y;
+        return "(".$this->x . "," . $this->y.")";
     }
 }
 
@@ -84,7 +84,12 @@ class Maze
         );
 
         foreach ($testpoints as $testPoint) {
-            if ($testPoint->x > 0 && $testPoint->y > 0 && $this->maze[$testPoint->x][$testPoint->y] === 0) {
+            if ($testPoint->x > 0
+                && $testPoint->y > 0
+                && $testPoint->x < $this->size_x
+                && $testPoint->y < $this->size_y
+                && $this->maze[$testPoint->x][$testPoint->y] === 0
+            ) {
                 $neightbourPoints[] = $testPoint;
             }
         }
@@ -103,23 +108,25 @@ class Maze
     public function pathFinder($tmpPoint, $way)
     {
         echo $tmpPoint . "\n";
-        $this->print_maze();
-        echo "\n";
 
         $way[] = $tmpPoint;
         $this->setPointAvalaible($tmpPoint);
         $neightbours = $this->getPointNeightbours($tmpPoint);
-        while (count($way) < 80) {
+        do{
             if (count($neightbours) == 0) {
                 $this->setPointAvalaible($tmpPoint);
-                return $way;
-            } else {
+                $tmpPoint= $way[count($way)-1];
+                unset($way[count($way)-1]);
+                return $this->pathFinder($tmpPoint, $way);
+            } elseif(count($way)>1) {
                 $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
                 $this->setWay($tmpPoint, $neightbour);
                 $tmpPoint = $neightbour;
                 return $this->pathFinder($tmpPoint, $way);
-            }
-        }
+            }else{
+                $this->setPointAvalaible($tmpPoint);
+                return $way;}
+        }while ($tmpPoint!= new Point(1,1));
     }
 }
 
@@ -130,10 +137,37 @@ $way = array();
 $p = new Point(1, 1);
 $testMaze = new Maze(21, 51);
 
-$way[] = $testMaze->pathFinder($p, array());
+$way= $testMaze->pathFinder($p, array());
 
 $testMaze->print_maze();
 
+
+function pointSort($p1, $p2)
+{
+    if ($p1->x < $p2->x) {
+        return -1;
+    } elseif ($p1->x > $p2->x) {
+        return 1;
+    } elseif ($p1->y < $p2->y) {
+        return -1;
+    } elseif ($p1->y > $p2->y) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/*echo "count = " . count($way) . "\n";
+foreach($way as $a) {
+    echo $a;
+}
+uasort($way, "pointSort");
+array_unique($way, SORT_REGULAR);
+echo "\n";
+echo "count = " . count($way) . "\n";
+foreach($way as $a) {
+        echo $a;
+}*/
 
 /*$way[] = $neightbour;
 $cnt = count($way);
