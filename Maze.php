@@ -129,26 +129,27 @@ class Maze
     {
         $way = [];
         $maxWayCount = count($way);
-        $maxWayValue = $startPoint;
-        $tmpPoint = $startPoint;
+        $tmpPoint = clone $startPoint;
+        $maxWayValue = $tmpPoint;
+        $way[] = $tmpPoint;
         do {
             $neightbours = $this->getPointNeightbours($tmpPoint);
             while (count($neightbours) != 0) {
+                $this->setPointAvalaible($tmpPoint);
+                $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
+                $this->setWay($tmpPoint, $neightbour);
+                $tmpPoint = $neightbour;
                 $way[] = $tmpPoint;
                 if (count($way) > $maxWayCount) {
                     $maxWayCount = count($way);
                     $maxWayValue = $tmpPoint;
                 }
                 $this->setPointAvalaible($tmpPoint);
-                $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
-                $this->setWay($tmpPoint, $neightbour);
-                $tmpPoint = $neightbour;
-                $this->setPointAvalaible($tmpPoint);
                 $neightbours = $this->getPointNeightbours($tmpPoint);
             }
             array_pop($way);
             $tmpPoint = array_pop($way);
-        } while ($tmpPoint->x === $startPoint->x && $tmpPoint->y === $startPoint->y);
+        } while (($tmpPoint->x === $startPoint->x) && ($tmpPoint->y === $startPoint->y));
 
         $this->setPointExit($maxWayValue);
     }
