@@ -1,3 +1,6 @@
+h1{
+
+}
 .main {
     background-color: darkgrey;
     width: auto;
@@ -6,6 +9,7 @@
     display: table;
     word-spacing: -.36em;
     line-height: 0;
+
 }
 
 .block {
