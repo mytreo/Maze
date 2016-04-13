@@ -1,0 +1,34 @@
+.main {
+    background-color: darkgrey;
+    width: auto;
+    height: auto;
+    padding: 10pt;
+    display: table;
+    word-spacing: -.36em;
+    line-height: 0;
+}
+
+.block {
+    height: 20pt;
+    width: 20pt;
+    display: inline-block;
+    word-spacing: normal;
+}
+
+.wall {
+    background-color: black;
+    cursor: no-drop;
+}
+
+.way {
+    background-color: yellow;
+}
+
+.exit {
+    background-color: red;
+}
+
+div .way:hover {
+    background-color: green;
+    cursor: move;
+}

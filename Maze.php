@@ -6,16 +6,18 @@ class Maze
     const WALL = 'X';
     const OPPORTUNITY = 0;
     const WAY = '*';
+    const EXIT_CELL = 'E';
     public $size_x;
     public $size_y;
     public $maze;
 
-    public function __construct($x = 3, $y = 3)
+    //$type 1 recursive max 21*21, 2
+    public function __construct($x = 3, $y = 3, $type = 2)
     {
         $this->size_x = $x;
         $this->size_y = $y;
-        $this->maze = $this->create_maze($this->size_x, $this->size_y);
-        $this->pathFinder(new Point(1, 1), array());
+        $this->maze = $this-> createMazeMatrix($this->size_x, $this->size_y);
+        ($type == 1) ? $this->pathFinder(new Point(1, 1), array()) : $this->pathFinder2(new Point(1,1), array());
 
         for ($i = 0; $i < $this->size_x; $i++) {
             for ($j = 0; $j < $this->size_y; $j++) {
@@ -24,10 +26,10 @@ class Maze
                 }
             }
         }
+        $this->maze[1][0] = self::WAY;
     }
 
-
-    private function create_maze($size_x, $size_y)
+    private function createMazeMatrix($size_x, $size_y)
     {
         $simpleMaze = array();
         for ($i = 0; $i < $size_x; $i++) {
@@ -63,6 +65,11 @@ class Maze
         $this->maze[$point->x][$point->y] = self::WAY;
     }
 
+    private function setPointExit($point)
+    {
+        $this->maze[$point->x][$point->y] = self::EXIT_CELL;
+    }
+
     private function getPointNeightbours($point)
     {
         $neightbourPoints = array();
@@ -94,7 +101,6 @@ class Maze
         $this->setPointAvalaible($wallPoint);
     }
 
-
     private function pathFinder($tmpPoint, $way)
     {
         $way[] = $tmpPoint;
@@ -104,6 +110,7 @@ class Maze
             if (count($neightbours) == 0) {
                 if (count($way) > 1) {
                     array_pop($way);
+                    // $this->setPointExit($tmpPoint);
                     $tmpPoint = array_pop($way);
                     return $this->pathFinder($tmpPoint, $way);
                 } else {
@@ -117,6 +124,35 @@ class Maze
             }
         } while ($tmpPoint != new Point(1, 1));
     }
+
+    private function pathFinder2($startPoint)
+    {
+        $way = [];
+        $maxWayCount = count($way);
+        $maxWayValue = $startPoint;
+        $tmpPoint = $startPoint;
+        do {
+            $neightbours = $this->getPointNeightbours($tmpPoint);
+            while (count($neightbours) != 0) {
+                $way[] = $tmpPoint;
+                if (count($way) > $maxWayCount) {
+                    $maxWayCount = count($way);
+                    $maxWayValue = $tmpPoint;
+                }
+                $this->setPointAvalaible($tmpPoint);
+                $neightbour = $neightbours[mt_rand(0, count($neightbours) - 1)];
+                $this->setWay($tmpPoint, $neightbour);
+                $tmpPoint = $neightbour;
+                $this->setPointAvalaible($tmpPoint);
+                $neightbours = $this->getPointNeightbours($tmpPoint);
+            }
+            array_pop($way);
+            $tmpPoint = array_pop($way);
+        } while ($tmpPoint->x === $startPoint->x && $tmpPoint->y === $startPoint->y);
+
+        $this->setPointExit($maxWayValue);
+    }
+
 }
 
 ?>
