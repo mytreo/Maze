@@ -10,11 +10,11 @@
 <body>
 <h1>MAZE GENERATOR</h1>
 <form action="index.php" method="post">
-    <input type="number" name="x">
-    <input type="number" name="y">
-    <input type="action">
+    <input type="number" name="x" min="5" placeholder="x value" required value="21">
+    <input type="number" name="y" min="5" placeholder="y value" required value="=21">
+    <input type="submit">
 </form>
-
+<hr>
 <?php
 require_once('Maze.php');
 $x=($_POST['x'] == null)?21:$_POST['x'] ;
