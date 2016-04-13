@@ -149,10 +149,7 @@ class Maze
             }
             array_pop($way);
             $tmpPoint = array_pop($way);
-
-            if(($tmpPoint->x === $startPoint->x) && ($tmpPoint->y === $startPoint->y)){
-                echo "yahoo";
-            }
+            
         } while (($tmpPoint->x !== $startPoint->x) || ($tmpPoint->y !== $startPoint->y));
 
         $this->setPointExit($maxWayValue);
